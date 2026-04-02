@@ -1,6 +1,6 @@
 MIT + Non-Commercial clause (custom license)
 
-Copyright (c) [year] [fullname]
+Copyright (c) 2026 Pablo Pussell
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software to use, copy, modify, and distribute it for non-commercial purposes.
