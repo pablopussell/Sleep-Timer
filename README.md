@@ -1,4 +1,4 @@
-# Sleep Timer ![alt text]([https://cdn-icons-png.freepik.com/128/12225/12225673.png])
+# Sleep Timer ![Logo](https://cdn-icons-png.freepik.com/128/12225/12225673.png)
 
 For those, like me, that find comfort/drowsiness in having a movie or TV show in the background when bedtime comes around.
 
