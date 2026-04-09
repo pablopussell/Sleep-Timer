@@ -7,6 +7,7 @@ Ever wake up to find that somehow Netflix/Prime/etc have looped through movies o
 
 If so, then this one is for you my friend!
 
+
 ## Features
 
 When launched, the following user-predefined settings are established:
@@ -28,3 +29,15 @@ Once timer expires:
 - All transitions are progressive and smooth - no sharp corners here!
 - When brightness level is restored before going to sleep, the screen is mostly black, preventing bright screen glare
 - There's not much I can do about about the volume - suggestions are welcome however.
+
+
+## Installation
+
+There are 2 options:
+
+1. Install as standalone/portable version (includes .NET 8 Runtime)
+- File size is substantially larger
+
+2. Install without .NET Runtime embedded
+- Requires .NET Runtime be installed separately
+- Will be prompted to install when launching for the first time
