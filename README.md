@@ -17,10 +17,10 @@ When launched, the following user-predefined settings are established:
 
 At warning checkpoint:
 
-- Semi-transparent overlay fades in with a countdown to sleep, progressively turning to pitch black before finally going to sleep
+- Semi-transparent dark overlay fades in with a countdown to sleep, progressively turning opaque/pitch black before finally going to sleep
 
 Once timer expires: 
-- Brightness and volume levels are reverted to those at app runtime
+- Brightness and volume levels are reverted to those prior to app runtime
 - Computer is set to sleep (Modern Standby)
 
 **Creature Comforts**
