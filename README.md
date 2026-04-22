@@ -5,7 +5,7 @@ For those, like me, that find comfort/drowsiness in having a movie or TV show in
 
 Ever wake up to find that somehow Netflix/Prime/etc have looped through movies one after another, keeping your screen on till ungodly hours killing your battery and screen lifetime in the process?
 
-If so, then this one is for you my friend!
+If so, then this one's for you my friends!
 
 
 ## Features
@@ -14,15 +14,15 @@ When launched, the following user-predefined settings are established:
 
 - Timer duration
 - Warning prior to timer expiry
-- Brightness & volume levels, adjusted automatically at runtime
+- Brightness & volume levels (automatically & progressively adjusted at runtime)
 
 At warning checkpoint:
 
-- Semi-transparent dark overlay fades in with a countdown to sleep, progressively turning opaque/pitch black before finally going to sleep
+- Semi-transparent dark overlay fades in with a countdown to sleep, progressively turning opaque/pitch black before finally sending PC into sleep mode
 
 Once timer expires: 
 - Brightness and volume levels are reverted to those prior to app runtime
-- Computer is set to sleep (Modern Standby)
+- PC set to sleep (Modern Standby)
 
 **Creature Comforts**
 - *If any input is detected (touch/buttons/mouse/keyboard) the timer is reset*
@@ -36,8 +36,7 @@ Once timer expires:
 There are 2 options:
 
 1. Install as standalone/portable version (includes .NET 8 Runtime)
-- File size is substantially larger
+- File size substantially larger
 
 2. Install without .NET Runtime embedded
-- Requires .NET Runtime be installed separately
-- Will be prompted to install when launching for the first time
+- Requires .NET Runtime (automatically prompted at first launch)
