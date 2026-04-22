@@ -1,4 +1,4 @@
-![Logo](https://cdn-icons-png.freepik.com/128/12225/12225607.png)
+![Logo](https://raw.githubusercontent.com/pablopussell/Sleep-Timer/refs/heads/master/Sleep%20Timer/Screenshots/moon-light.png)
 # Sleep Timer
 
 For those, like me, that find comfort/drowsiness in having a movie or TV show in the background when bedtime comes around.
