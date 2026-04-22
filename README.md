@@ -33,13 +33,13 @@ Once timer expires:
 
 ## Installation
 
-There are 2 options:
+There are 2 variants:
 
-1. Standalone/portable executable version (includes .NET 8 Runtime)
+1. Standalone/portable executable (includes .NET 8 Runtime)
 - File size substantially larger
 
-2. Light executable version
-- Requires .NET Runtime (automatically prompted at first launch)
+2. Light executable
+- Requires .NET Runtime Installation (automatically prompted at first launch)
 
 ## Screenshots
 
