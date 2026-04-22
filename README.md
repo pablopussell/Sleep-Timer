@@ -35,8 +35,31 @@ Once timer expires:
 
 There are 2 options:
 
-1. Install as standalone/portable version (includes .NET 8 Runtime)
+1. Standalone/portable executable version (includes .NET 8 Runtime)
 - File size substantially larger
 
-2. Install without .NET Runtime embedded
+2. Light executable version
 - Requires .NET Runtime (automatically prompted at first launch)
+
+## Screenshots
+
+#### Files (NET Runtime Included)
+![Files_NET Runtime INcluded](https://raw.githubusercontent.com/pablopussell/Sleep-Timer/refs/heads/master/Sleep%20Timer/Screenshots/Files_NET%20Runtime%20INcluded.png)
+
+#### Files (NET Runtime Excluded)
+![Files_NET Runtime EXcluded](https://raw.githubusercontent.com/pablopussell/Sleep-Timer/refs/heads/master/Sleep%20Timer/Screenshots/Files_NET%20Runtime%20EXcluded.png)
+
+#### Sleep Timer Started Notification
+![Sleep Timer Started Notification](https://raw.githubusercontent.com/pablopussell/Sleep-Timer/refs/heads/master/Sleep%20Timer/Screenshots/Sleep%20Timer%20Started%20Notification.png)
+
+#### TrayIcon + Options
+![TrayIcon + Options](https://raw.githubusercontent.com/pablopussell/Sleep-Timer/refs/heads/master/Sleep%20Timer/Screenshots/TrayIcon%20%2B%20Options.png)
+
+#### Config Reloaded Notification
+![Config Reloaded Notification](https://raw.githubusercontent.com/pablopussell/Sleep-Timer/refs/heads/master/Sleep%20Timer/Screenshots/Config%20Reloaded%20Notification.png)
+
+#### Overlay Start: Countdown to Sleep
+![Overlay Countdown to Sleep](https://raw.githubusercontent.com/pablopussell/Sleep-Timer/refs/heads/master/Sleep%20Timer/Screenshots/Overlay%20Countdown%20to%20Sleep.png)
+
+#### Overlay End: Countdown to Sleep
+![Overlay Countdown to Sleep_2](https://raw.githubusercontent.com/pablopussell/Sleep-Timer/refs/heads/master/Sleep%20Timer/Screenshots/Overlay%20Countdown%20to%20Sleep_2.png)
