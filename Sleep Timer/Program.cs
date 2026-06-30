@@ -27,6 +27,16 @@ class Program : Form
     private float initialVolumeScalar;
     private int initialBrightness;
 
+    private ToolStripMenuItem? brightnessSubMenu;
+    private ToolStripMenuItem? volumeSubMenu;
+    private ToolStripMenuItem? idleSubMenu;
+    private ToolStripMenuItem? warnSubMenu;
+
+    private ToolStripTextBox? brightnessTextBox;
+    private ToolStripTextBox? volumeTextBox;
+    private ToolStripTextBox? idleTextBox;
+    private ToolStripTextBox? warnTextBox;
+
 
     [StructLayout(LayoutKind.Sequential)]
     struct LASTINPUTINFO
@@ -104,10 +114,7 @@ class Program : Form
         trayIcon.Icon = Sleep_Timer.Properties.Resources.moon_dark;
         trayIcon.Visible = true;
 
-        var menu = new ContextMenuStrip();
-        menu.Items.Add("Reloading config", null, ReloadConfig);
-        menu.Items.Add("Exit", null, Exit);
-        trayIcon.ContextMenuStrip = menu;
+        BuildMenu();
 
         trayIcon.ShowBalloonTip(1000, "Active", $"Sleep Timer Set: {config.idleMinutes} min", ToolTipIcon.Info);
 
@@ -117,6 +124,7 @@ class Program : Form
         idleTimer.Start();
 
         ApplySettings();
+        UpdateMenuStates();
     }
 
     // =============================
@@ -145,10 +153,24 @@ class Program : Form
         }
     }
 
+    private void SaveConfig()
+    {
+        try
+        {
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+            File.WriteAllText(path, JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true }));
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Error saving config.json: " + ex.Message);
+        }
+    }
+
     private void ReloadConfig(object? sender, EventArgs e)
     {
         LoadConfig();
         ApplySettings();
+        UpdateMenuStates();
         trayIcon?.ShowBalloonTip(1000, "Config", "Reloaded", ToolTipIcon.Info);
     }
 
@@ -156,6 +178,274 @@ class Program : Form
     {
         SetBrightness(config.brightness);
         SetVolume(config.volume);
+    }
+
+    // =============================
+    // DYNAMIC CONTEXT MENU STRIP
+    // =============================
+    private void BuildMenu()
+    {
+        var menu = new ContextMenuStrip();
+        menu.Opening += (s, e) => UpdateMenuStates();
+
+        // 1. Header/Info
+        var headerItem = new ToolStripMenuItem("Sleep Timer") { Enabled = false };
+        menu.Items.Add(headerItem);
+        menu.Items.Add(new ToolStripSeparator());
+
+        // 2. Brightness Submenu
+        brightnessSubMenu = new ToolStripMenuItem("Brightness");
+        BuildBrightnessSubMenu();
+        menu.Items.Add(brightnessSubMenu);
+
+        // 3. Volume Submenu
+        volumeSubMenu = new ToolStripMenuItem("Volume");
+        BuildVolumeSubMenu();
+        menu.Items.Add(volumeSubMenu);
+
+        // 4. Idle Minutes Submenu
+        idleSubMenu = new ToolStripMenuItem("Idle Minutes");
+        BuildIdleSubMenu();
+        menu.Items.Add(idleSubMenu);
+
+        // 5. Warn Seconds Submenu
+        warnSubMenu = new ToolStripMenuItem("Warning Delay");
+        BuildWarnSubMenu();
+        menu.Items.Add(warnSubMenu);
+
+        menu.Items.Add(new ToolStripSeparator());
+        menu.Items.Add(new ToolStripMenuItem("Reload config", null, ReloadConfig));
+        menu.Items.Add(new ToolStripMenuItem("Exit", null, Exit));
+
+        if (trayIcon != null)
+        {
+            trayIcon.ContextMenuStrip = menu;
+        }
+    }
+
+    private void BuildBrightnessSubMenu()
+    {
+        if (brightnessSubMenu == null) return;
+        brightnessSubMenu.DropDownItems.Clear();
+
+        brightnessTextBox = new ToolStripTextBox();
+        brightnessTextBox.KeyDown += (s, e) => OnTextBoxKeyDown(s, e, val =>
+        {
+            config.brightness = Math.Clamp(val, 0, 100);
+            SaveConfig();
+            ApplySettings();
+            UpdateMenuStates();
+        });
+
+        brightnessSubMenu.DropDownItems.Add(new ToolStripMenuItem("Custom (%) :") { Enabled = false });
+        brightnessSubMenu.DropDownItems.Add(brightnessTextBox);
+        brightnessSubMenu.DropDownItems.Add(new ToolStripSeparator());
+
+        int[] presets = { 0, 10, 25, 50, 75, 100 };
+        foreach (int p in presets)
+        {
+            var item = new ToolStripMenuItem($"{p}%") { Tag = p };
+            item.Click += (s, e) =>
+            {
+                config.brightness = p;
+                SaveConfig();
+                ApplySettings();
+                UpdateMenuStates();
+            };
+            brightnessSubMenu.DropDownItems.Add(item);
+        }
+    }
+
+    private void BuildVolumeSubMenu()
+    {
+        if (volumeSubMenu == null) return;
+        volumeSubMenu.DropDownItems.Clear();
+
+        volumeTextBox = new ToolStripTextBox();
+        volumeTextBox.KeyDown += (s, e) => OnTextBoxKeyDown(s, e, val =>
+        {
+            config.volume = Math.Clamp(val, 0, 100);
+            SaveConfig();
+            ApplySettings();
+            UpdateMenuStates();
+        });
+
+        volumeSubMenu.DropDownItems.Add(new ToolStripMenuItem("Custom (%) :") { Enabled = false });
+        volumeSubMenu.DropDownItems.Add(volumeTextBox);
+        volumeSubMenu.DropDownItems.Add(new ToolStripSeparator());
+
+        int[] presets = { 0, 10, 25, 50, 75, 100 };
+        foreach (int p in presets)
+        {
+            var item = new ToolStripMenuItem($"{p}%") { Tag = p };
+            item.Click += (s, e) =>
+            {
+                config.volume = p;
+                SaveConfig();
+                ApplySettings();
+                UpdateMenuStates();
+            };
+            volumeSubMenu.DropDownItems.Add(item);
+        }
+    }
+
+    private void BuildIdleSubMenu()
+    {
+        if (idleSubMenu == null) return;
+        idleSubMenu.DropDownItems.Clear();
+
+        idleTextBox = new ToolStripTextBox();
+        idleTextBox.KeyDown += (s, e) => OnTextBoxKeyDown(s, e, val =>
+        {
+            config.idleMinutes = Math.Max(1, val);
+            config.warnSecondsBefore = Math.Clamp(config.warnSecondsBefore, 0, Math.Max(0, config.idleMinutes * 60 - 1));
+            SaveConfig();
+            UpdateMenuStates();
+        });
+
+        idleSubMenu.DropDownItems.Add(new ToolStripMenuItem("Custom (min) :") { Enabled = false });
+        idleSubMenu.DropDownItems.Add(idleTextBox);
+        idleSubMenu.DropDownItems.Add(new ToolStripSeparator());
+
+        int[] presets = { 1, 2, 5, 10, 15, 30, 60 };
+        foreach (int p in presets)
+        {
+            var item = new ToolStripMenuItem($"{p} min") { Tag = p };
+            item.Click += (s, e) =>
+            {
+                config.idleMinutes = p;
+                config.warnSecondsBefore = Math.Clamp(config.warnSecondsBefore, 0, Math.Max(0, config.idleMinutes * 60 - 1));
+                SaveConfig();
+                UpdateMenuStates();
+            };
+            idleSubMenu.DropDownItems.Add(item);
+        }
+    }
+
+    private void BuildWarnSubMenu()
+    {
+        if (warnSubMenu == null) return;
+        warnSubMenu.DropDownItems.Clear();
+
+        warnTextBox = new ToolStripTextBox();
+        warnTextBox.KeyDown += (s, e) => OnTextBoxKeyDown(s, e, val =>
+        {
+            config.warnSecondsBefore = Math.Clamp(val, 0, Math.Max(0, config.idleMinutes * 60 - 1));
+            SaveConfig();
+            UpdateMenuStates();
+        });
+
+        warnSubMenu.DropDownItems.Add(new ToolStripMenuItem("Custom (sec) :") { Enabled = false });
+        warnSubMenu.DropDownItems.Add(warnTextBox);
+        warnSubMenu.DropDownItems.Add(new ToolStripSeparator());
+
+        int[] presets = { 5, 10, 30, 60, 120 };
+        foreach (int p in presets)
+        {
+            var item = new ToolStripMenuItem($"{p} sec") { Tag = p };
+            item.Click += (s, e) =>
+            {
+                config.warnSecondsBefore = Math.Clamp(p, 0, Math.Max(0, config.idleMinutes * 60 - 1));
+                SaveConfig();
+                UpdateMenuStates();
+            };
+            warnSubMenu.DropDownItems.Add(item);
+        }
+    }
+
+    private void OnTextBoxKeyDown(object? sender, KeyEventArgs e, Action<int> updateAction)
+    {
+        if (e.KeyCode == Keys.Enter)
+        {
+            if (sender is ToolStripTextBox textBox)
+            {
+                if (int.TryParse(textBox.Text, out int val))
+                {
+                    updateAction(val);
+                }
+                else
+                {
+                    UpdateMenuStates();
+                }
+                trayIcon?.ContextMenuStrip?.Close();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
+    }
+
+    private void UpdateMenuStates()
+    {
+        if (trayIcon?.ContextMenuStrip == null) return;
+
+        if (trayIcon.ContextMenuStrip.Items.Count > 0 && trayIcon.ContextMenuStrip.Items[0] is ToolStripMenuItem header)
+        {
+            header.Text = $"Sleep Timer: {config.idleMinutes} min ({config.warnSecondsBefore}s warn)";
+        }
+
+        if (brightnessSubMenu != null)
+        {
+            brightnessSubMenu.Text = $"Brightness ({config.brightness}%)";
+            if (brightnessTextBox != null && !brightnessTextBox.Focused)
+            {
+                brightnessTextBox.Text = config.brightness.ToString();
+            }
+            foreach (ToolStripItem item in brightnessSubMenu.DropDownItems)
+            {
+                if (item is ToolStripMenuItem presetItem && presetItem.Tag is int val)
+                {
+                    presetItem.Checked = (val == config.brightness);
+                }
+            }
+        }
+
+        if (volumeSubMenu != null)
+        {
+            volumeSubMenu.Text = $"Volume ({config.volume}%)";
+            if (volumeTextBox != null && !volumeTextBox.Focused)
+            {
+                volumeTextBox.Text = config.volume.ToString();
+            }
+            foreach (ToolStripItem item in volumeSubMenu.DropDownItems)
+            {
+                if (item is ToolStripMenuItem presetItem && presetItem.Tag is int val)
+                {
+                    presetItem.Checked = (val == config.volume);
+                }
+            }
+        }
+
+        if (idleSubMenu != null)
+        {
+            idleSubMenu.Text = $"Idle Minutes ({config.idleMinutes} min)";
+            if (idleTextBox != null && !idleTextBox.Focused)
+            {
+                idleTextBox.Text = config.idleMinutes.ToString();
+            }
+            foreach (ToolStripItem item in idleSubMenu.DropDownItems)
+            {
+                if (item is ToolStripMenuItem presetItem && presetItem.Tag is int val)
+                {
+                    presetItem.Checked = (val == config.idleMinutes);
+                }
+            }
+        }
+
+        if (warnSubMenu != null)
+        {
+            warnSubMenu.Text = $"Warning Delay ({config.warnSecondsBefore} sec)";
+            if (warnTextBox != null && !warnTextBox.Focused)
+            {
+                warnTextBox.Text = config.warnSecondsBefore.ToString();
+            }
+            foreach (ToolStripItem item in warnSubMenu.DropDownItems)
+            {
+                if (item is ToolStripMenuItem presetItem && presetItem.Tag is int val)
+                {
+                    presetItem.Checked = (val == config.warnSecondsBefore);
+                }
+            }
+        }
     }
 
     // ===============================================================
