@@ -241,7 +241,7 @@ class Program : Form
         brightnessSubMenu.DropDownItems.Add(brightnessTextBox);
         brightnessSubMenu.DropDownItems.Add(new ToolStripSeparator());
 
-        int[] presets = { 0, 10, 25, 50, 75, 100 };
+        int[] presets = { 0, 5, 10, 15, 20, 25 };
         foreach (int p in presets)
         {
             var item = new ToolStripMenuItem($"{p}%") { Tag = p };
@@ -274,7 +274,7 @@ class Program : Form
         volumeSubMenu.DropDownItems.Add(volumeTextBox);
         volumeSubMenu.DropDownItems.Add(new ToolStripSeparator());
 
-        int[] presets = { 0, 10, 25, 50, 75, 100 };
+        int[] presets = { 0, 5, 10, 15, 20, 25 };
         foreach (int p in presets)
         {
             var item = new ToolStripMenuItem($"{p}%") { Tag = p };
@@ -307,7 +307,7 @@ class Program : Form
         idleSubMenu.DropDownItems.Add(idleTextBox);
         idleSubMenu.DropDownItems.Add(new ToolStripSeparator());
 
-        int[] presets = { 1, 2, 5, 10, 15, 30, 60 };
+        int[] presets = { 15, 30, 45, 60, 90, 120 };
         foreach (int p in presets)
         {
             var item = new ToolStripMenuItem($"{p} min") { Tag = p };
@@ -339,7 +339,7 @@ class Program : Form
         warnSubMenu.DropDownItems.Add(warnTextBox);
         warnSubMenu.DropDownItems.Add(new ToolStripSeparator());
 
-        int[] presets = { 5, 10, 30, 60, 120 };
+        int[] presets = { 10, 20, 30, 60, 120 };
         foreach (int p in presets)
         {
             var item = new ToolStripMenuItem($"{p} sec") { Tag = p };
