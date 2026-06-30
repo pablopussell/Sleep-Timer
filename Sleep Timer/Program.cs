@@ -339,7 +339,7 @@ class Program : Form
         warnSubMenu.DropDownItems.Add(warnTextBox);
         warnSubMenu.DropDownItems.Add(new ToolStripSeparator());
 
-        int[] presets = { 10, 20, 30, 60, 120 };
+        int[] presets = { 15, 30, 45, 60, 120 };
         foreach (int p in presets)
         {
             var item = new ToolStripMenuItem($"{p} sec") { Tag = p };
