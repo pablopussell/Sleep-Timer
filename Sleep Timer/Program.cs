@@ -6,9 +6,9 @@ using System.Text.Json;
 
 class Config
 {
-    public int brightness { get; set; } = 4;
-    public int volume { get; set; } = 12;
-    public int idleMinutes { get; set; } = 2;
+    public int brightness { get; set; } = 10;
+    public int volume { get; set; } = 20;
+    public int idleMinutes { get; set; } = 45;
     public int warnSecondsBefore { get; set; } = 60;
 }
 
